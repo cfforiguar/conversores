@@ -1,0 +1,209 @@
+Modeling class example,  45 degree, gasoline, fired
+  irest    0
+ nohydro   0
+  itype    1
+  lwall    1
+  lpr        0
+  irez     2
+  ncfilm 99999
+  nctap8 3000
+  nclast 99999
+  ncmon  10
+ ncaspec     0
+  gmv        1.0
+  cafilm     1.0
+  cafin      90.0
+  angmom     1.0
+  pgssw      0
+  dti        1.0e-5
+  dtmxca     1.0
+  dtmax      5.0e-5
+  tlimd      0.0
+  twfilm     9.99e+9
+  twfin      9.99e+9
+  fchsp      0.25
+  bore       9.843
+  stroke     9.55
+  squish     0.182
+  rpm     1600.0
+  atdc       -90.0
+  datdct     0.0
+  revrep     2.0
+  conrod     16.269
+  swirl      3.0
+  swipro     3.11
+  thsect     45.0
+  sector     1.0
+  deact      0.0
+  epsy       1.0e-3
+  epsv       1.0e-3
+  epsp       1.0e-4
+  epst       1.0e-3
+  epsk       1.0e-3
+  epse       1.0e-3
+  gx         0.0
+  gy         0.0
+  gz         0.0
+  tcylwl   383.5
+  thead    406.5
+  tpistn   440.0
+  pardon     0.0
+  a0         0.0
+  b0         1.0
+  artvis     0.0
+  ecnsrv     0.0
+  adia       0.0
+  anu0       0.0
+  visrat    -0.66666667
+  tcut     300.0
+  tcute   1000.0
+  epschm     0.02
+  omgchm     1.0
+  turbsw     1.0
+  sgsl       0.0
+ trbchem     0.0
+  capa      18.0
+ pmplict     2.0
+ lospeed     0
+  airmu1     1.457e-5
+  airmu2   110.0
+  airla1   252.0
+  airla2   200.0
+  prl        0.74
+  rpr        1.11
+  rsc        1.11
+  xignit     1.0e+4
+  t1ign     -1.0
+  tdign     -1.0
+  ca1ign   -27.0
+  cadign     9.6
+  xignl1     0.25
+  xignr1     0.75
+  yignf1     0.0
+  yignd1     0.238
+  zignb1    11.75
+  zignt1    12.50
+  xignl2     0.0
+  xignr2     0.0
+  yignf2     0.0
+  yignd2     0.0
+  zignb2     0.0
+  zignt2     0.0
+  kwikeq     0
+  numnoz     1
+  numinj     1
+  numvel     1
+  t1inj     -1.0
+  tdinj     -1.0
+  ca1inj   -52.0
+  cadinj    12.672
+  tspmas     0.0116
+  tnparc   1500.0
+  pulse      2.0
+ injdist     0
+  kolide     1
+  tpi      350.0
+  turb       1.0
+ breakup     1.0
+  evapp      1.0
+  numdiv    18
+  scf      100.0
+  drnoz      0.1
+  dznoz     13.0
+  dthnoz     22.5
+  tiltxy     22.5
+  tiltxz     30.0
+  cone      62.5
+  dcone     12.5
+  anoz       7.07e-4
+  smr        .015
+  amp0       0.0
+  diameterinjector 0.01
+      4000.0
+  nsp     12  1
+gasoline   1.0     0.00001
+      o2   mw2     32.000  htf2     0.0
+      n2   mw3     28.016  htf3     0.0
+     co2   mw4     44.011  htf4   -93.965
+     h2o   mw5     18.016  htf5   -57.103
+       h   mw6      1.008  htf6    51.631
+      h2   mw7      2.016  htf7     0.0
+       o   mw8     16.000  htf8    58.989
+       n   mw9     14.008  htf9   112.520
+      oh   mw10    17.008  htf10    9.289
+      co   mw11    28.011  htf11  -27.200
+      no   mw12    30.008  htf12   21.456
+stoifuel     4.0
+  stoio2    49.0
+nregions     1
+ presi,      1.63e+6
+ tempi,    400.0
+ tkei,       0.10
+ scli,       0.0
+  er,        0.0
+ mfracfu,    0.0
+ mfraco2,    0.220
+ mfracn2,    0.765
+ mfracco2,   0.010
+ mfrach2o,   0.005
+ mfrach,     0.0
+ mfrach2,    0.0
+ mfraco,     0.0
+ mfracn,     0.0
+ mfracoh,    0.0
+ mfracco,    0.0
+ mfracno,    0.0
+  nrk        4
+ cf1   8.0000e10 ef1   1.5780e+4 zf1      0.0
+ cb1      0.0    eb1      0.0    zb1      0.0
+ am1     4   49    0    0    0    0    0    0    0    0    0    0
+ bm1     0    0    0   32   34    0    0    0    0    0    0    0
+ ae1    0.250   1.500   0.000   0.000   0.000   0.000   0.000   0.000
+        0.000   0.000   0.000   0.000
+ be1    0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000
+        0.000   0.000   0.000   0.000
+ cf2   1.5587e14 ef2   6.7627e+4 zf2      0.0
+ cb2   7.5000e12 eb2      0.0    zb2      0.0
+ am2     0    1    2    0    0    0    0    0    0    0    0    0
+ bm2     0    0    0    0    0    0    0    0    2    0    0    2
+ ae2    0.000   0.500   1.000   0.000   0.000   0.000   0.000   0.000
+        0.000   0.000   0.000   0.000
+ be2    0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000
+        1.000   0.000   0.000   1.000
+ cf3   2.6484e10 ef3   5.9418e+4 zf3      1.0
+ cb3   1.6000e+9 eb3   1.9678e+4 zb3      1.0
+ am3     0    2    1    0    0    0    0    0    0    0    0    0
+ bm3     0    0    0    0    0    0    0    2    0    0    0    2
+ ae3    0.000   1.000   0.500   0.000   0.000   0.000   0.000   0.000
+        0.000   0.000   0.000   0.000
+ be3    0.000   0.000   0.000   0.000   0.000   0.000   0.000   1.000
+        0.000   0.000   0.000   1.000
+ cf4   2.1230e14 ef4   5.7020e+4 zf4      0.0
+ cb4      0.0    eb4      0.0    zb4      0.0
+ am4     0    0    1    0    0    0    0    0    0    2    0    0
+ bm4     0    0    0    0    0    2    0    0    0    0    0    2
+ ae4    0.000   0.000   0.500   0.000   0.000   0.000   0.000   0.000
+        0.000   1.000   0.000   0.000
+ be4    0.000   0.000   0.000   0.000   0.000   1.000   0.000   0.000
+        0.000   0.000   0.000   1.000
+  nre       6
+ as1   0.990207  bs1   -51.7916  cs1   0.993074  ds1  -0.343428  es1   0.0111668
+ an1     0    0    0    0    0    0    1    0    0    0    0    0
+ bn1     0    0    0    0    0    2    0    0    0    0    0    0
+ as2   0.431310  bs2   -59.6554  cs2   3.503350  ds2  -0.340016  es2   0.0158715
+ an2     0    1    0    0    0    0    0    0    0    0    0    0
+ bn2     0    0    0    0    0    0    0    2    0    0    0    0
+ as3   0.794709  bs3  -113.2080  cs3   3.168370  ds3  -0.443814  es3   0.0269699
+ an3     0    0    1    0    0    0    0    0    0    0    0    0
+ bn3     0    0    0    0    0    0    0    0    2    0    0    0
+ as4  -0.652939  bs4    -9.8232  cs4   3.930330  ds4   0.163490  es4  -0.0142865
+ an4     0    1    0    0    0    0    1    0    0    0    0    0
+ bn4     0    0    0    0    0    0    0    0    0    2    0    0
+ as5   1.158882  bs5   -76.8472  cs5   8.532155  ds5  -0.868320  es5   0.0463471
+ an5     0    1    0    0    2    0    0    0    0    0    0    0
+ bn5     0    0    0    0    0    0    0    0    0    4    0    0
+ as6   0.980875  bs6    68.4453  cs6  -10.5938   ds6   0.574260  es6  -0.0414570
+ an6     0    1    0    0    0    0    0    0    0    0    2    0
+ bn6     0    0    0    2    0    0    0    0    0    0    0    0
+ nvalves  0
+  isoot     0
