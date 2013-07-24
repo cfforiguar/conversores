@@ -3,7 +3,8 @@ function []=GMV2TECPLOT()
     %%%%%%%%%%%%%%%%%
     %Entradas
     archivo='plotgmv_mesh';
-    keywords={'nodes' 'cells'};
+    keywords={'nodes' 'cells' 'f'};
+%bug    keywords={'nodes' 'cells' 'f' 'fv' 'idreg'};% ---- Este no funciona pues fv no es un valor nodal ni cell-centered
     %keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'er' };
     %keywords={'nodes' 'cells'};
     %keywords={'nodes' 'cells' 'pressure' 'temp' 'density' 'tke' 'scl' 'er' 'totmass'};
@@ -20,10 +21,10 @@ function []=GMV2TECPLOT()
     %%%%%%%%%%%%%%%%%
     Variables=[];
     Celda=ScanArchivo(keywords,archivo);
-    fid=fopen('GMV2TECPLOT.dat','wt+');
+    fid=fopen('GMV2TECPLOT.tec','wt+');
     for i=1:size(keywords,2)
         if str2double(Celda{1}{i})==0
-            %Valores de tipo cell centered: presión, temp, etc
+            %Valores de tipo cell centered: presiï¿½n, temp, etc
             Variables=[Variables ',"' keywords{i} '"'];
         end
         if str2double(Celda{1}{i})==1
@@ -49,13 +50,13 @@ function []=GMV2TECPLOT()
         maquillaje(keywords,Celda,0,i)
     end
     %ClearNAN('GMV2TECPLOT.dat')
-    disp('función agonia')
+    disp('funciï¿½n agonia')
 end
 function []=ClearNAN(StrArchivo)
     while 1
         fid=fopen(StrArchivo,'a');
         tline = fgetl(fid);
-        if ~ischar(tline), break, end %cuando llegue a EOF sálgase
+        if ~ischar(tline), break, end %cuando llegue a EOF sï¿½lgase
         tline = regexprep(tline,' nan ','','ignorecase');
     end
 end
@@ -71,15 +72,15 @@ end
 function []=maquillaje(keywords,Celda,Compartida,Paso)
 %Compartida=1 en caso de que sea malla compartida
 %Paso es el paso en el que va
-    fid=fopen('GMV2TECPLOT.dat','a');
+    fid=fopen('GMV2TECPLOT.tec','a');
     CellCenter=[];
     if Compartida==0
         for i=1:size(Celda{1},2)
             if str2double(char(Celda{1}{i}))==0
                 if strcmp(char(keywords{3}),'velocity')
-                    CellCenter=[CellCenter ' ' num2str(i+3)]; %Por que posición y velocidad son 6 variables ocupa la 7ma pos en adelante
+                    CellCenter=[CellCenter ' ' num2str(i+3)]; %Por que posiciï¿½n y velocidad son 6 variables ocupa la 7ma pos en adelante
                 else
-                    CellCenter=[CellCenter ' ' num2str(i+1)]; %Por que posición son 3 variables ocupa la 4ta pos en adelante
+                    CellCenter=[CellCenter ' ' num2str(i+1)]; %Por que posiciï¿½n son 3 variables ocupa la 4ta pos en adelante
                 end
             end
         end
@@ -89,12 +90,12 @@ function []=maquillaje(keywords,Celda,Compartida,Paso)
         fprintf(fid, ['ZONE T= "PASO      ' num2str(Paso) '"   N=' char(Celda{1}{1}) ',   E=' char(Celda{1}{2}) ',   F=FEBLOCK,  ET=BRICK' CellCenter '\n']);
         for i=1:size(keywords,2)
             if i~=2
-                %haga la cadena de acuerdo al tamaño de cada Cell
+                %haga la cadena de acuerdo al tamaï¿½o de cada Cell
                 Cadena=['\n'];
                 for j=1:size(Celda{1,2}{1,i},2)
                     Cadena=[' %+12.4E' Cadena];
                 end
-                fprintf(fid,Cadena,cell2mat(cell2double(Celda{1,2}{1,i}))'); %la comilla para qué se pone-pw se transpone la matriz-?
+                fprintf(fid,Cadena,cell2mat(cell2double(Celda{1,2}{1,i}))'); %la comilla para quï¿½ se pone-pw se transpone la matriz-?
             end
         end
         fprintf(fid, '%6d  %6d  %6d  %6d  %6d  %6d  %6d  %6d\n', cell2mat(cell2double(Celda{1,2}{1,2}))');
@@ -102,12 +103,12 @@ function []=maquillaje(keywords,Celda,Compartida,Paso)
         fprintf(fid, ['ZONE T= "PASO      ' num2str(Paso) '"   N=' char(Celda{1}{1}) ',   E=' char(Celda{1}{2}) ',   F=FEBLOCK,  ET=BRICK, D=(1,2,3,FECONNECT) \n']);
         %fprintf(fid, 'ZONE T= "PASO      1"   N=5832,   E=4913,   F=FEBLOCK,  ET=BRICK D=(1,2,3,FECONNECT) \n ');
         for i=3:size(keywords,2)
-            %haga la cadena de acuerdo al tamaño de cada Cell
+            %haga la cadena de acuerdo al tamaï¿½o de cada Cell
             Cadena=['\n'];
             for j=size(Celda{1,2}{1,i},2)
                 Cadena=[' %12.4E' Cadena];
             end
-            fprintf(fid,Cadena,cell2mat(cell2double(Celda{1,2}{1,i}))'); %la comilla para qué se pone-pw se transpone la matriz-?
+            fprintf(fid,Cadena,cell2mat(cell2double(Celda{1,2}{1,i}))'); %la comilla para quï¿½ se pone-pw se transpone la matriz-?
         end
     end
     fclose(fid);
@@ -115,7 +116,7 @@ end
 function CeldaTot=ScanArchivo(keywords,StrArchivo)
     %mandar un vector de palabras clave para que busque cuando las halle
     %saque la info clave que sea del caso y luego saque una matriz hasta que
-    %le llegue una vacía, si le llega una vacía entonces busque la
+    %le llegue una vacï¿½a, si le llega una vacï¿½a entonces busque la
     %siguiente palabra clave
     %keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'er' 'totmass'}
     %keywords={'nodes'};
@@ -128,14 +129,14 @@ function CeldaTot=ScanArchivo(keywords,StrArchivo)
     %Flag que se usa para saber si ha pasado por cadenas tipo 'char #' ej:
     %cell 3466
     flag =0;
-    ParamCell=1;%Parametro que se usa para saber si está en la mtx de conectividad
-    DimFlag=0;%Flag que se usa para dimensionar la matrices de números
+    ParamCell=1;%Parametro que se usa para saber si estï¿½ en la mtx de conectividad
+    DimFlag=0;%Flag que se usa para dimensionar la matrices de nï¿½meros
     while 1
         tline = fgetl(fid);
-        if ~ischar(tline), break, end %cuando llegue a EOF sálgase
+        if ~ischar(tline), break, end %cuando llegue a EOF sï¿½lgase
         %keywords(i)
         %minador(char(keywords(i)),tline,0)
-        if i>size(keywords,2),break, end %Si se acaba la cadena sálgase
+        if i>size(keywords,2),break, end %Si se acaba la cadena sï¿½lgase
         numeros=minador(char(keywords(i)),tline,ParamCell); %Se demora 2.6 secs
         %numeros=str2num(tline); %Se demora 5.6 secs
         if ~isempty(numeros)
@@ -143,7 +144,7 @@ function CeldaTot=ScanArchivo(keywords,StrArchivo)
                 DimHorizontal=size(numeros,2);
                 Key=char(keywords{i});
                 Num=char(data{i});
-                %Este if dimensiona la celda según sea el caso cell, nodal,
+                %Este if dimensiona la celda segï¿½n sea el caso cell, nodal,
                 %cell-centered
                 if strcmp(Key,'nodes')||strcmp(Num,'1')
                     NumData=str2double(cell2mat(data{1}));
@@ -161,10 +162,10 @@ function CeldaTot=ScanArchivo(keywords,StrArchivo)
                 j=j+1;
             else
                 if j>=DimCelda
-                    %Acá es una fuente potencial de un bug. Ojo a los
-                    %mensajes de TECPLOT diciendo que el número de cells no
+                    %Acï¿½ es una fuente potencial de un bug. Ojo a los
+                    %mensajes de TECPLOT diciendo que el nï¿½mero de cells no
                     %es suficiente. Puede deberse a que se ha comido de 1 a
-                    %3 líneas de los nodos.
+                    %3 lï¿½neas de los nodos.
                     %if 
                     Celda{i}(j,1:1:size(numeros,2))=numeros;
                     j=j+1;
@@ -199,7 +200,7 @@ function CeldaTot=ScanArchivo(keywords,StrArchivo)
                 end
 %                 TmpData=str2double(cell2mat(data{i}));
 %                 if TmpData==0
-%                     %Valores de tipo cell centered: presión, temp, etc
+%                     %Valores de tipo cell centered: presiï¿½n, temp, etc
 %                     NumData=str2double(cell2mat(data{2}));
 %                 end
 %                 if TmpData==1
@@ -228,29 +229,29 @@ function CeldaTot=ScanArchivo(keywords,StrArchivo)
     %minador('nodes','nodes         3180',0)
 end
 function y=minador(Keyword,str,Case_Mtx)
-%Saca los datos de acuerdo a los parámetros de entrada. Saca los datos para
-%los valores nuéricos, matriz de conectividades y características de las
-%variables (número de nodos, núm de celdas y tipo de variable-nodal, cell centered-)
+%Saca los datos de acuerdo a los parï¿½metros de entrada. Saca los datos para
+%los valores nuï¿½ricos, matriz de conectividades y caracterï¿½sticas de las
+%variables (nï¿½mero de nodos, nï¿½m de celdas y tipo de variable-nodal, cell centered-)
     switch Case_Mtx
         case 0
-        %Genera una expresión regular con la palabra clave keyword
+        %Genera una expresiï¿½n regular con la palabra clave keyword
         %Sirve para los casos el tipo "nodes 234324" donde genera la salida
         %de la variable y = 234324
         RegExpr=strcat('(?<=',Keyword,' +)\d+');
         case 1
-        %Genera una expresión regular para sacar los números de las
-        %cadenotas de números en formato double que aparecen en las
+        %Genera una expresiï¿½n regular para sacar los nï¿½meros de las
+        %cadenotas de nï¿½meros en formato double que aparecen en las
         %posiciones nodales, velocidades, etc.
         RegExpr='\<(-|)\d+.\d+E.\d+';
         case 2
-        %Genera una expresión regular para quitar expresiones de tipo 
+        %Genera una expresiï¿½n regular para quitar expresiones de tipo 
         %"hex     8" en la matriz de conectividades como por ejemplo:
         %hex      8    152    154    169    168    283    285    300    299
-        %Funciona simplemente cogiendo los valores numéricos que son 
-        %antecedidos por números y no por letras.
+        %Funciona simplemente cogiendo los valores numï¿½ricos que son 
+        %antecedidos por nï¿½meros y no por letras.
         RegExpr='(?<= +\d+ +)\d+';
         case 3
-        %Genera una expresión regular con la palabra clave keyword
+        %Genera una expresiï¿½n regular con la palabra clave keyword
         %Sirve para los casos el tipo "var 23.E+4324" donde genera la salida
         %de la variable y = 23.E+4324 (fusion de los casos 0 y 1)
         RegExpr=strcat('\s(?<=','\<',Keyword,' +)\d+.\d+E.\d+');
@@ -258,7 +259,7 @@ function y=minador(Keyword,str,Case_Mtx)
         %Saca las palabras y quita los espacios.
         RegExpr=strcat('\<\S+');
     end
-    %Coje la expresión regular y saca los valores que coinciden con la
+    %Coje la expresiï¿½n regular y saca los valores que coinciden con la
     %misma.
     y=regexp(str,RegExpr,'match');
 end

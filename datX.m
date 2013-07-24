@@ -47,7 +47,7 @@ clc
 end
 function Celda=datX2()
 % Saca los datos de las funciones dat.xxx y las plotea
-    archivo='dat.dynamic';
+    archivo='dat.thermo';
     fid=fopen(archivo,'r');
     cont=1;
     while 1
