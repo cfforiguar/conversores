@@ -9,6 +9,8 @@ Pendientes
 -Para Paraview: Unir los archivos de gotas y los normales
 -Perfeccionar la segunda versión del lector para que sea tan estable como la primera versión
 -Incorporar una forma de que se pueda escoger entre la salida para Paraview y la de Tecplot
+-Modificar los scripts para que funcionen con los enlaces.
+
 
 Para la versión 3:
   -Migrar a otro lenguaje con compilador abierto
