@@ -1,0 +1,23 @@
+Pendientes
+-Unificar las copias de los archivos en las carpetas Ttest** y crear enlaces a un sólo archivo de código fuente en la carpeta principal. Archivos pendientes:
+  -GMV2Tecplot2.m en los dos directorios
+  -MGMV2TECPLOT.m en los dos directorios
+  *Usar el comando:
+  *diff -y -s --suppress-common-lines  GMV2Tecplot2.m "$(pwd)/test files/GMV2Tecplot2.m"
+
+-Hacer -encontrar en los apuntes- un escrito que explique las diferencias entre los archivos generados para Paraview y los de tecplot
+-Para Paraview: Unir los archivos de gotas y los normales
+-Perfeccionar la segunda versión del lector para que sea tan estable como la primera versión
+-Incorporar una forma de que se pueda escoger entre la salida para Paraview y la de Tecplot
+
+Para la versión 3:
+  -Migrar a otro lenguaje con compilador abierto
+    -Python+cython, gfortran+fortran0*, c, c++?
+  -Conservar el procesamiento en paralelo de V2
+  -Hacer algoritmo que lea el programa y automáticamente vaya separando 
+   los datos sin que el usuario le diga previamente qué buscar.
+  -Generar comprimidos/binarios para Paraview (python?)
+  -Consola interactiva ¿GUI? para que el usuario escoja qué quiere 
+   imprimir
+  -Absorber datx para evitar confusiones
+
