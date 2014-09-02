@@ -4,8 +4,9 @@
 %Toca corregir el c�digo para que queden tracersX, tracersY, tracersZ a
 %pesar de que no haya gotas para plotear.
 function [y]=GMV2Tecplot2()
-keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'er' 'totmass'};
-tipos=[1 2 1 0 0 0 0 0 0 0];
+keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'totmass' 'nc7h16' 'o2' 'n2' 'co2' 'h2o' 'h' 'h2' 'o' 'n' 'oh' 'co' 'no' 'h2o2' 'ho2' 'ch3o' 'ch2o' 'hco' 'ch2' 'ch3' 'ch4' 'c2h3' 'c2h4' 'c2h5' 'c3h4' 'c3h5' 'c3h6' 'c3h7' 'c7h15-2' 'c7h15o2' 'c7ket12' 'c5h11co'};
+%keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'totmass' 'ch2o'};% 'hco' 'ch2' 'ch3' 'ch4' 'c2h3' 'c2h4' 'c2h5' 'c3h4' 'c3h5' 'c3h6' 'c3h7' 'c7h15-2' 'c7h15o2' 'c7ket12' 'c5h11co'};
+tipos=[1 2 1 0 0 0 0 0 0 0 zeros(1,80)];
 %Incluir la funci�n para que encuentre todos los archivos
 MaximoSize=ScanMaxFile();
 Maximo=MaximoSize(1);
@@ -22,10 +23,10 @@ y=ScanArchivo(keywords,archivo,tipos);
         if tipos(i)==0
             Variables=[Variables '"' char(keywords(i)) '",'];
         end
-        if tipos(i)==1
+        if tipos(i)==1&&i>2
             Variables=[Variables '"' char(keywords(i)) 'X"' ',"' char(keywords(i)) 'Y"' ',"' char(keywords(i)) 'Z",'];
         end
-        if tipos(i)==1&&i~=2
+        if tipos(i)==1&&i==1
             Variables=[Variables '"x"' ',"y"' ',"z",'];
         end
     end
@@ -42,6 +43,9 @@ y=ScanArchivo(keywords,archivo,tipos);
         y=ScanArchivo(keywords,archivo,tipos);
         if isempty(y);continue; end %En caso de no encontrar archivo
         maquillaje(y,i,Nombrearchivo)
+        if i==7
+            disp('test')
+        end
     end
 %end %En caso de no encontrar archivo
 end
@@ -68,6 +72,9 @@ function y=ScanArchivo(keywords,archivo,tipos)
         return;
     end
     for i=1:size(keywords,2)
+        if i== 10
+            disp('ncyh16');
+        end
         test=SacaParam(fid,keywords{1,i},0);
         if TestEOF(fid)
             return;%Salgase en caso de EOF
@@ -176,12 +183,13 @@ function Mtx=SacaNum(fid,ConvSpec,HeaderLines)
 end
 function Celda=SacaParam(fid,keyword,HeaderLines)
 %Busque y capture algo que se parezca al keyword de entrada
-    TmpCell=textscan(fid,['%[' keyword ']' '%f \n'],'HeaderLines',HeaderLines);
-    if ~strcmp(TmpCell{1,1},keyword) %Mire si el par�metro es coincidente
-        TmpCell=cell(1,2);%Si no es coincidente devuelva una cell vac�a
-    end
+    TmpCell=textscan(fid,[ keyword '%f\n'],'HeaderLines',HeaderLines);
+    if isempty(TmpCell{1,1})%Mire si el par�metro es coincidente
+        Celda=cell(1,2);%Si no es coincidente devuelva una cell vac�a
+    else
     %textscan('  qwerta 134','%*s %f')
-    Celda={TmpCell{1,1} {TmpCell{1,2}}};
+    Celda={{keyword} TmpCell};
+    end
 end
 function y=TestEOF(fid)
 %aunque matlab recomienda usar fgetl esta corre el punto de lectura del

@@ -3,7 +3,9 @@ function []=GMV2TECPLOT()
     %%%%%%%%%%%%%%%%%
     %Entradas
     archivo='plotgmv00';
-    keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'fuel' 'O2' 'N2' 'H' 'H2' 'OH' 'CH3'};
+    %Mazi's mechanismn %BUG: it only reads until ch3o. It collapses for
+    %'ch2o' onwards
+    keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'nc7h16' 'o2' 'n2' 'co2' 'h2o' 'h' 'h2' 'o' 'n'  'oh' 'co' 'no' 'h2o2' 'ho2' 'ch3o'};% 'ch2o' 'hco' 'ch2' 'ch3' 'ch4' 'c2h3' 'c2h4' 'c2h5' 'c3h4' 'c3h5' 'c3h6' 'c3h7' 'c7h15-2' 'c7h15o2' 'c7ket12' 'c5h11co'};
     %keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'er' 'totmass'};
     %keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'er' };
     %keywords={'nodes' 'cells'};
@@ -16,7 +18,7 @@ function []=GMV2TECPLOT()
     %keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp'};%ok
     %Tst4
     %keywords={'nodes' 'cells' 'pressure' 'temp'};%ok
-    index=1;
+    index=6;
     clc
     %%%%%%%%%%%%%%%%%
     Variables=[];
@@ -31,7 +33,7 @@ function []=GMV2TECPLOT()
             %Valores de tipo nodal ej:velocidad
             Variables=[Variables ',"' keywords{i} 'X"' ',"' keywords{i} 'Y"' ',"' keywords{i} 'Z"'];
         end
-        if str2double(Celda{1}{i})>1&&i~=2
+        if (str2double(Celda{1}{i})>1)&&(i~=2)
             %Nodos (se deja aparte por conveniencia)
             Variables=[Variables '"x"' ',"y"' ',"z"'];
         end

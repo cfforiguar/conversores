@@ -25,7 +25,7 @@ clc
             for n=2:size(Labels,2)
                 handle=handle+1;
                 FigHandle(handle)=figure(n-1);
-                PlotHandle(handle)=plot(Mtx(:,1),Mtx(:,n),colores(cont));% Si hay muchas carpetas por acá se cae: se acaban los colores
+                PlotHandle(handle)=plot(Mtx(:,1),Mtx(:,n),colores(cont));% Si hay muchas carpetas por acï¿½ se cae: se acaban los colores
                 %set(PlotHandle(handle),'userdata',y(i,1).name);
                 s{handle}=y(i,1).name;
                 hold on;
@@ -92,29 +92,29 @@ function y=cell2double(Celda)
     y=Celda;
 end
 function y=minador(Keyword,str,Case_Mtx)
-%Saca los datos de acuerdo a los parámetros de entrada. Saca los datos para
-%los valores nuéricos, matriz de conectividades y características de las
-%variables (número de nodos, núm de celdas y tipo de variable-nodal, cell centered-)
+%Saca los datos de acuerdo a los parï¿½metros de entrada. Saca los datos para
+%los valores nuï¿½ricos, matriz de conectividades y caracterï¿½sticas de las
+%variables (nï¿½mero de nodos, nï¿½m de celdas y tipo de variable-nodal, cell centered-)
     switch Case_Mtx
         case 0
-        %Genera una expresión regular con la palabra clave keyword
+        %Genera una expresiï¿½n regular con la palabra clave keyword
         %Sirve para los casos el tipo "nodes 234324" donde genera la salida
         %de la variable y = 234324
         RegExpr=strcat('(?<=',Keyword,' +)\d+');
         case 1
-        %Genera una expresión regular para sacar los números de las
-        %cadenotas de números en formato double que aparecen en las
+        %Genera una expresiï¿½n regular para sacar los nï¿½meros de las
+        %cadenotas de nï¿½meros en formato double que aparecen en las
         %posiciones nodales, velocidades, etc.
         RegExpr='\<(-|)\d+.\d+E.\d+';
         case 2
-        %Genera una expresión regular para quitar expresiones de tipo 
+        %Genera una expresiï¿½n regular para quitar expresiones de tipo 
         %"hex     8" en la matriz de conectividades como por ejemplo:
         %hex      8    152    154    169    168    283    285    300    299
-        %Funciona simplemente cogiendo los valores numéricos que son 
-        %antecedidos por números y no por letras.
+        %Funciona simplemente cogiendo los valores numï¿½ricos que son 
+        %antecedidos por nï¿½meros y no por letras.
         RegExpr='(?<= +\d+ +)\d+';
         case 3
-        %Genera una expresión regular con la palabra clave keyword
+        %Genera una expresiï¿½n regular con la palabra clave keyword
         %Sirve para los casos el tipo "var 23.E+4324" donde genera la salida
         %de la variable y = 23.E+4324 (fusion de los casos 0 y 1)
         RegExpr=strcat('\s(?<=','\<',Keyword,' +)\d+.\d+E.\d+');
@@ -122,7 +122,7 @@ function y=minador(Keyword,str,Case_Mtx)
         %Saca las palabras y quita los espacios.
         RegExpr=strcat('\<\S+');
     end
-    %Coje la expresión regular y saca los valores que coinciden con la
+    %Coje la expresiï¿½n regular y saca los valores que coinciden con la
     %misma.
     y=regexp(str,RegExpr,'match');
 end

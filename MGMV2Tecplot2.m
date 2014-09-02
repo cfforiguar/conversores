@@ -1,25 +1,22 @@
 %Ojo al "bug" de las zonas a la hora de fusionar con la malla
-    %Toca hacer que las zonas sin gotas queden vacías para tenerlas en
+    %Toca hacer que las zonas sin gotas queden vacï¿½as para tenerlas en
     %cuenta
-%Toca corregir el código para que queden tracersX, tracersY, tracersZ a
+%Toca corregir el cï¿½digo para que queden tracersX, tracersY, tracersZ a
 %pesar de que no haya gotas para plotear.
 function [y]=MGMV2Tecplot2()
 keywords={'nodes' 'cells'};
-tipos=[1 2 1 0 0 0 0 0 0 0];
-%Incluir la función para que encuentre todos los archivos
-MaximoSize=ScanMaxFile();
-Maximo=MaximoSize(1);
-Tamano=MaximoSize(2);
-archivo=['plotgmv_mesh' strrep(num2str(zeros(1,Tamano)),' ','')];
+tipos=[1 2];
+%Incluir la funciï¿½n para que encuentre todos los archivos
+%MaximoSize=ScanMaxFile();
+Maximo=1;
+%Tamano=MaximoSize(2);
+archivo=['plotgmv_mesh'];
 %archivo='plotgmv09';
 y=ScanArchivo(keywords,archivo,tipos);
-    fid=fopen('GMV2TECPLOT.dat','wt+');
+    fid=fopen('GMV2TECPLOT.tec','wt+');
     fprintf(fid, '   TITLE = "Archivo convertido de GMV a Tecplot GMV2TECPLOT 2.0"\n');
-    Variables=[];
+    Variables=['"x","y","z"'];
     %%%%%%%%%%
-    for i=1:size(keywords,2)
-        Variables=[Variables '"' char(keywords(i)) '",'];
-    end
     fprintf(fid, ['    VARIABLES =' Variables '\n']);
     fclose(fid);
     %%%%%%%%%%
@@ -28,8 +25,8 @@ y=ScanArchivo(keywords,archivo,tipos);
     for i=1:Maximo
         i
         %Cambia el nombre de archivo para que lo escanee
-        chain=num2str(i);
-        archivo(size(archivo,2)-size(chain,2)+1:size(archivo,2))=chain;
+        %chain=num2str(i);
+        %archivo(size(archivo,2)-size(chain,2)+1:size(archivo,2))=chain;
         y=ScanArchivo(keywords,archivo,tipos);
         if isempty(y);continue; end %En caso de no encontrar archivo
         maquillaje(y,i)
@@ -76,11 +73,11 @@ function y=ScanArchivo(keywords,archivo,tipos)
             test=SacaParam(fid,keywords{1,i},1);
             %i=i+1
         end
-        ConvSpec='%f %f %f %f %f %f %f %f %f %f';%Cambiar en la migración para cell
+        ConvSpec='%f %f %f %f %f %f %f %f %f %f';%Cambiar en la migraciï¿½n para cell
         if strcmp(keywords{1,i},'cells')
             ConvSpec='hex %*f %f %f %f %f %f %f %f %f';
         end
-        %Acá aplicar función CambioFormato para las salidas
+        %Acï¿½ aplicar funciï¿½n CambioFormato para las salidas
         TmpMtx=SacaNum(fid,ConvSpec,0);
         if tipos(i)==1||tipos(i)==3
             salida(cont:cont+2)=CambioFormato(keywords{i},tipos(i),TmpMtx,test{1,2}{1});
@@ -97,9 +94,9 @@ function y=ScanArchivo(keywords,archivo,tipos)
 end
 function maquillaje(StruData,Paso)
     %Asegurarse de limpiar los NAN
-    fid=fopen('GMV2TECPLOT.dat','a');
+    fid=fopen('GMV2TECPLOT.tec','a');
     
-    CellCenter=[', VARLOCATION=([' num2str(find([StruData.Tipo]==0),'%u ') ']=CELLCENTERED) '];
+    CellCenter=[];
     fprintf(fid, ['ZONE T= "PASO      ' num2str(Paso) '"   N=' num2str(StruData(1).Param) ',   E=' num2str(StruData(4).Param) ',   F=FEBLOCK,  ET=BRICK' CellCenter '\n']);
 
     
@@ -145,7 +142,7 @@ function y=CambioFormato(keyword,tipo,TmpMtx,Param)
             y(i).Tipo=tipo;
         end
     end
-    if tipo==2 %Cell centered ¿se necesita?
+    if tipo==2 %Cell centered ï¿½se necesita?
         Numdata=ceil(Param/size(TmpMtx,2));
         for i=1:1:3
             y(i).Keyword=[keyword];
@@ -159,25 +156,25 @@ function y=CambioFormato(keyword,tipo,TmpMtx,Param)
     end
 end
 function Mtx=SacaNum(fid,ConvSpec,HeaderLines)
-%'HeaderLines' número de líneas a saltar
+%'HeaderLines' nï¿½mero de lï¿½neas a saltar
 %textscan(fopen('plotgmv09'),'%f %f %f %f %f %f %f %f %f %f','HeaderLines',2)
 %textscan(fopen('plotgmv09'),'nodes %f','HeaderLines',1)
-%Evaluar la conveniencia de usar la opción CollectOutput de textscan
+%Evaluar la conveniencia de usar la opciï¿½n CollectOutput de textscan
     Mtx=cell2mat(textscan(fid,ConvSpec,'HeaderLines',HeaderLines,'CollectOutput',1));
 end
 function Celda=SacaParam(fid,keyword,HeaderLines)
 %Busque y capture algo que se parezca al keyword de entrada
     TmpCell=textscan(fid,['%[' keyword ']' '%f \n'],'HeaderLines',HeaderLines);
-    if ~strcmp(TmpCell{1,1},keyword) %Mire si el parámetro es coincidente
-        TmpCell=cell(1,2);%Si no es coincidente devuelva una cell vacía
+    if ~strcmp(TmpCell{1,1},keyword) %Mire si el parï¿½metro es coincidente
+        TmpCell=cell(1,2);%Si no es coincidente devuelva una cell vacï¿½a
     end
     %textscan('  qwerta 134','%*s %f')
     Celda={TmpCell{1,1} {TmpCell{1,2}}};
 end
 function y=TestEOF(fid)
 %aunque matlab recomienda usar fgetl esta corre el punto de lectura del
-%archivo entonces se optó por la línea descomentada pero no por el uso de
-%fgetl. Se escribe esta función en caso de que se tenga que corregir algún
+%archivo entonces se optï¿½ por la lï¿½nea descomentada pero no por el uso de
+%fgetl. Se escribe esta funciï¿½n en caso de que se tenga que corregir algï¿½n
 %fallo relacionado con que se quede leyendo un archivo. Por ahora funciona
 %bien.
 
