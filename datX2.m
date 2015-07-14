@@ -44,6 +44,10 @@ clc
        Vector=int8([0:size(PlotHandle,2)/(cont-1):size(PlotHandle,2)*(1-1/(cont-1))]);
        legend(PlotHandle(Vector+i),s(Vector+i),'Location','SouthOutside');
        Nombre=regexp(get(get(get(FigHandle(i),'CurrentAxes'),'YLabel'),'String'),'\w+','match');
+       if strcmp(Nombre{1},'Press')
+         AxHandle=findall(FigHandle(i),'type','axes');
+         xlim(AxHandle(end),[-100 100]);
+       end
        saveas(FigHandle(i),cell2mat(Nombre(1)),'jpg');
        saveas(FigHandle(i),cell2mat(Nombre(1)),'fig');
     end
