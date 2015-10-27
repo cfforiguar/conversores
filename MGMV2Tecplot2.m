@@ -4,8 +4,8 @@
 %Toca corregir el c�digo para que queden tracersX, tracersY, tracersZ a
 %pesar de que no haya gotas para plotear.
 function [y]=MGMV2Tecplot2()
-keywords={'nodes' 'cells'};
-tipos=[1 2];
+keywords={'nodes' 'cells' 'f' 'fv' 'idreg'};
+tipos=[1 2 0 1 1];
 %Incluir la funci�n para que encuentre todos los archivos
 %MaximoSize=ScanMaxFile();
 Maximo=1;
@@ -15,8 +15,19 @@ archivo=['plotgmv_mesh'];
 y=ScanArchivo(keywords,archivo,tipos);
     fid=fopen('GMV2TECPLOT.tec','wt+');
     fprintf(fid, '   TITLE = "Archivo convertido de GMV a Tecplot GMV2TECPLOT 2.0"\n');
-    Variables=['"x","y","z"'];
+    Variables=[];
     %%%%%%%%%%
+    for i=1:size(keywords,2)
+        if tipos(i)==0
+            Variables=[Variables '"' char(keywords(i)) '",'];
+        end
+        if tipos(i)==1&&i>2
+            Variables=[Variables '"' char(keywords(i)) 'X"' ',"' char(keywords(i)) 'Y"' ',"' char(keywords(i)) 'Z",'];
+        end
+        if tipos(i)==1&&i==1
+            Variables=[Variables '"x"' ',"y"' ',"z",'];
+        end
+    end
     fprintf(fid, ['    VARIABLES =' Variables '\n']);
     fclose(fid);
     %%%%%%%%%%
@@ -68,6 +79,10 @@ function y=ScanArchivo(keywords,archivo,tipos)
         isempty(test{1,1});
         while isempty(test{1,1})
             if TestEOF(fid)
+                y=salida;
+                if i<size(keywords,2)
+                    disp(['keywords{} No ' num2str(i) ' no encontrado. Lectura de archivo omitida'])
+                end 
                 return;%Salgase en caso de EOF
             end 
             test=SacaParam(fid,keywords{1,i},1);
@@ -80,8 +95,12 @@ function y=ScanArchivo(keywords,archivo,tipos)
         %Ac� aplicar funci�n CambioFormato para las salidas
         TmpMtx=SacaNum(fid,ConvSpec,0);
         if tipos(i)==1||tipos(i)==3
-            salida(cont:cont+2)=CambioFormato(keywords{i},tipos(i),TmpMtx,test{1,2}{1});
-            cont=cont+3;
+            if ~strcmp(keywords{i},'nodes')
+                salida(cont:cont+2)=CambioFormato(keywords{i},tipos(i),TmpMtx,salida(1).Param);
+            else
+                salida(cont:cont+2)=CambioFormato(keywords{i},tipos(i),TmpMtx,test{1,2}{1});
+            end
+                cont=cont+3;
         else
             salida(cont).Keyword={keywords{i}};
             salida(cont).Param=test{1,2}{1};
@@ -96,13 +115,13 @@ function maquillaje(StruData,Paso)
     %Asegurarse de limpiar los NAN
     fid=fopen('GMV2TECPLOT.tec','a');
     
-    CellCenter=[];
+    CellCenter=[', VARLOCATION=([' num2str(find([StruData.Tipo]==0)-1,'%u ') ']=CELLCENTERED) ']; % El -1 es un quickn'Dirty por que el cell =2 genera un bug
     fprintf(fid, ['ZONE T= "PASO      ' num2str(Paso) '"   N=' num2str(StruData(1).Param) ',   E=' num2str(StruData(4).Param) ',   F=FEBLOCK,  ET=BRICK' CellCenter '\n']);
 
     
     %fprintf(fid,['ZONE T= "PASO      ' num2str(Paso) '" DATAPACKING=BLOCK
     %I=' num2str(StruData(1).Param) '\n']);
-    for i=1:size(StruData,2)
+    for i=[1:3 5:size(StruData,2) 4]
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         Cadena=['\n'];
         if StruData(i).Tipo==2
@@ -117,7 +136,7 @@ function maquillaje(StruData,Paso)
         fprintf(fid,Cadena,StruData(i).Mtx(1:end-1,:)');
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         Cadena=['\n'];
-        for j=1:max(find(~isnan(StruData(i).Mtx(end,:))))
+        for j=1:find(~isnan(StruData(i).Mtx(end,:)), 1, 'last' )
             Cadena=[Formato Cadena];
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -132,15 +151,22 @@ function y=CambioFormato(keyword,tipo,TmpMtx,Param)
 %         y(i).Param=Param;
 %         y(i).Tipo=tipo;
 %     end
-    if tipo==1 %Nodal xyz
-        Numdata=ceil(Param/size(TmpMtx,2));
+    if tipo==1 %Datos node-centered?
+      Numdata=ceil(Param/size(TmpMtx,2));
+      if Numdata == size(TmpMtx,1) %Nodal solo (escalar)?
+        y.Keyword=keyword;
+        y.Mtx=TmpMtx;
+        y.Param=Param;
+        y.Tipo=tipo;
+      else %Nodal xyz (vectorial)
         chain=struct('data',{'X' 'Y' 'Z'});
         for i=1:1:3
-            y(i).Keyword=[keyword chain(i).data];
-            y(i).Mtx=TmpMtx(Numdata*(i-1)+1:1:i*Numdata,:);
-            y(i).Param=Param;
-            y(i).Tipo=tipo;
+          y(i).Keyword=[keyword chain(i).data];
+          y(i).Mtx=TmpMtx(Numdata*(i-1)+1:1:i*Numdata,:);
+          y(i).Param=Param;
+          y(i).Tipo=tipo;
         end
+      end
     end
     if tipo==2 %Cell centered �se necesita?
         Numdata=ceil(Param/size(TmpMtx,2));
@@ -164,12 +190,13 @@ function Mtx=SacaNum(fid,ConvSpec,HeaderLines)
 end
 function Celda=SacaParam(fid,keyword,HeaderLines)
 %Busque y capture algo que se parezca al keyword de entrada
-    TmpCell=textscan(fid,['%[' keyword ']' '%f \n'],'HeaderLines',HeaderLines);
-    if ~strcmp(TmpCell{1,1},keyword) %Mire si el par�metro es coincidente
-        TmpCell=cell(1,2);%Si no es coincidente devuelva una cell vac�a
-    end
+    TmpCell=textscan(fid,[ keyword '%f\n'],'HeaderLines',HeaderLines);
+    if isempty(TmpCell{1,1})%Mire si el par�metro es coincidente
+        Celda=cell(1,2);%Si no es coincidente devuelva una cell vac�a
+    else
     %textscan('  qwerta 134','%*s %f')
-    Celda={TmpCell{1,1} {TmpCell{1,2}}};
+    Celda={{keyword} TmpCell};
+    end
 end
 function y=TestEOF(fid)
 %aunque matlab recomienda usar fgetl esta corre el punto de lectura del

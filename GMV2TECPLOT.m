@@ -5,11 +5,11 @@ function []=GMV2TECPLOT()
     archivo='plotgmv00';
     %Mazi's mechanismn %BUG: it only reads until ch3o. It collapses for
     %'ch2o' onwards
-    keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'nc7h16' 'o2' 'n2' 'co2' 'h2o' 'h' 'h2' 'o' 'n'  'oh' 'co' 'no' 'h2o2' 'ho2' 'ch3o'};% 'ch2o' 'hco' 'ch2' 'ch3' 'ch4' 'c2h3' 'c2h4' 'c2h5' 'c3h4' 'c3h5' 'c3h6' 'c3h7' 'c7h15-2' 'c7h15o2' 'c7ket12' 'c5h11co'};
+    %keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'nc7h16' 'o2' 'n2' 'co2' 'h2o' 'h' 'h2' 'o' 'n'  'oh' 'co' 'no' 'h2o2' 'ho2' 'ch3o'};% 'ch2o' 'hco' 'ch2' 'ch3' 'ch4' 'c2h3' 'c2h4' 'c2h5' 'c3h4' 'c3h5' 'c3h6' 'c3h7' 'c7h15-2' 'c7h15o2' 'c7ket12' 'c5h11co'};
     %keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'er' 'totmass'};
     %keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'er' };
     %keywords={'nodes' 'cells'};
-    %keywords={'nodes' 'cells' 'pressure' 'temp' 'density' 'tke' 'scl' 'er' 'totmass'};
+    keywords={'nodes' 'cells' 'pressure' 'temp' 'density' 'tke' 'scl' 'er' 'totmass'};
     %Tst1
     %keywords={'nodes' 'cells' 'velocity'};%Ok
     %Tst2

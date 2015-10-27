@@ -4,6 +4,10 @@
 %Toca corregir el c�digo para que queden tracersX, tracersY, tracersZ a
 %pesar de que no haya gotas para plotear.
 function [y]=GMV2Tecplot2()
+%Stock
+%keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'totmass'};
+%Tutorial
+%keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'totmass' 'IC8H18' 'O2' 'N2' 'CO2' 'H2O' 'H' 'H2' 'O' 'N' 'OH' 'CO' 'NO' 'CH4' 'CH3O' 'CH2O' 'HCO' 'CH3' 'C2H3' 'C2H4' 'C2H5' 'C3H4' 'C3H5' 'C3H6' 'C3H7' 'C7H16' 'C7H15' 'C7H15O2' 'C7H14OOH' 'O2C7H14OOH' 'C7KET' 'C5H11CO' 'C7H14' 'C8H17' 'C8H17O2' 'C8H16OOH' 'O2C8H16OOH' 'C8KET' 'C6H13CO' 'C8H16' 'H2O2' 'N2O' 'HO2' 'NO2' 'CH2OH' 'CH3OH' 'C2H2' 'CH2CO' 'HCCO'};
 %Mech nuevo de Xi c8h18
 %keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'totmass' 'C8H18' 'O2' 'N2' 'CO2' 'H2O' 'H' ' H2' 'O' 'N' 'OH' 'CO' 'NO' 'HCO' 'H2O2' 'HO2' 'CH4' 'CH3O' 'CH2' 'CH3' 'C2H3' 'C2H4' 'C2H5' 'C3H4' 'C3H5' 'C3H6' 'CH2O' 'C3H7' 'C4H8' 'C8H17' 'C8H16' 'C8H17OO' 'C8H16OOH' 'OC8H15OOH' 'OOC8H16OOH' 'OC8H15O' 'N2O' 'NO2' 'AR'};
 %Mech ic8h18:
