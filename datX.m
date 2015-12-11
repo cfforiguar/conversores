@@ -16,6 +16,9 @@ clc
         if getfield(y(i,1),'isdir')
             cd(fullfile(pwd,getfield(y(i,1),'name')));
             Salida=datX2;
+            if Salida==1
+                continue %Si no encuntra el archivo, busque en otra carpeta
+            end
             Unidades=Salida{1,:};
             Labels=Salida{2,:};
             Mtx=cell2mat(Salida{3,:});
@@ -49,6 +52,11 @@ function Celda=datX2()
 % Saca los datos de las funciones dat.xxx y las plotea
     archivo='dat.thermo';
     fid=fopen(archivo,'r');
+    if fid<3
+        Celda=1;
+        disp('archivo no encontrado en carpeta')
+        return
+    end
     cont=1;
     while 1
         tline = fgetl(fid);

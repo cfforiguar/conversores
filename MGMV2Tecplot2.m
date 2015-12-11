@@ -13,7 +13,7 @@ Maximo=1;
 archivo=['plotgmv_mesh'];
 %archivo='plotgmv09';
 y=ScanArchivo(keywords,archivo,tipos);
-    fid=fopen('GMV2TECPLOT.tec','wt+');
+    fid=fopen('MGMV2TECPLOT.tec','wt+');
     fprintf(fid, '   TITLE = "Archivo convertido de GMV a Tecplot GMV2TECPLOT 2.0"\n');
     Variables=[];
     %%%%%%%%%%
@@ -113,7 +113,7 @@ function y=ScanArchivo(keywords,archivo,tipos)
 end
 function maquillaje(StruData,Paso)
     %Asegurarse de limpiar los NAN
-    fid=fopen('GMV2TECPLOT.tec','a');
+    fid=fopen('MGMV2TECPLOT.tec','a');
     
     CellCenter=[', VARLOCATION=([' num2str(find([StruData.Tipo]==0)-1,'%u ') ']=CELLCENTERED) ']; % El -1 es un quickn'Dirty por que el cell =2 genera un bug
     fprintf(fid, ['ZONE T= "PASO      ' num2str(Paso) '"   N=' num2str(StruData(1).Param) ',   E=' num2str(StruData(4).Param) ',   F=FEBLOCK,  ET=BRICK' CellCenter '\n']);
