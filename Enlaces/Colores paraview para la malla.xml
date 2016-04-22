@@ -1,0 +1,8 @@
+<ColorMaps>
+  <ColorMap space="HSV" indexedLookup="true" name="aaaaaaaaaaaaaaaaaa">
+    <NaN r="0.65098" g="0.337255" b="0.156863"/>
+  </ColorMap>
+  <ColorMap space="HSV" indexedLookup="true" name="HSV">
+    <NaN r="0.65098" g="0.337255" b="0.156863"/>
+  </ColorMap>
+</ColorMaps>
