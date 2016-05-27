@@ -14,7 +14,7 @@ ScrName='datX2Lk.m'
 SrcMatlabFn=r'/home/carlos/Maestria/Mallador/Repositorios/conversores/Enlaces'
 shutil.copy(''.join([SrcMatlabFn,'/',ScrName]), dst)
 # Comando para convocar a matlab desde la consola sin que abra la GUI: matlab -nojvm -nodesktop -r "run <the/path>/<the-script>.m" vía http://ubuntuforums.org/showthread.php?t=825042
-subprocess.call(["matlab","-nojvm","-nodesktop","-r","".join(["run  '",dst,"/",ScrName,"' ;exit;"]),])#All sale de matlab con ' ;exit;'
+subprocess.call(["matlab","-nodesktop","-r","".join(["run  '",dst,"/",ScrName,"' ;exit;"]),])#All sale de matlab con ' ;exit;'
 
 #from paraview.simple import *
 #reader = OpenDataFile("/home/carlos/Trabajo/Cod_Kiva/GMV2TECPLOT.tec")

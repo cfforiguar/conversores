@@ -54,7 +54,7 @@ clc
 end
 function Celda=datX2()
 % Saca los datos de las funciones dat.xxx y las plotea
-    archivo='dat.thermo';
+    archivo='dat.species';
     fid=fopen(archivo,'r');
     if fid<=0
         Celda={};
