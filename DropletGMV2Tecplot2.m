@@ -6,6 +6,7 @@
 function [y]=DropletGMV2Tecplot2()
 keywords={'tracers' 'u_vel' 'v_vel' 'w_vel' 'temp' 'radius' 'spwall'};
 tipos=[1 0 0 0 0 0 0 zeros(1,80)];
+%%%4 4 4 4 4 1 0 0 0 
 %Incluir la funci�n para que encuentre todos los archivos
 MaximoSize=ScanMaxFile();
 Maximo=MaximoSize(1);
@@ -13,7 +14,7 @@ Tamano=MaximoSize(2);
 archivo=['plotgmv' char([0 0]+48)];
 %archivo='plotgmv09';
 y=ScanArchivo(keywords,archivo,tipos);
-    Nombrearchivo='DropletGMV2TECPLOT-P.tec';
+    Nombrearchivo='DropletGMV2TECPLOT-P_BETA.tec';
     fid=fopen(Nombrearchivo,'wt+');
     fprintf(fid, '   TITLE = "Convertido de GMV a Tecplot y paraview DropletGMV2TECPLOT 2.1"\n');
     Variables=[];
@@ -22,10 +23,10 @@ y=ScanArchivo(keywords,archivo,tipos);
         if tipos(i)==0
             Variables=[Variables '"' char(keywords(i)) '",'];
         end
-        if tipos(i)==1&&i>2
+        if (tipos(i)==1&&i>2)||strcmp(keywords{i},'tracers')%Para la velocidad ó tracers
             Variables=[Variables '"' char(keywords(i)) 'X"' ',"' char(keywords(i)) 'Y"' ',"' char(keywords(i)) 'Z",'];
         end
-        if tipos(i)==1&&i==1
+        if (tipos(i)==1&&i==1)&&~strcmp(keywords{i},'tracers')%Para evitar que los tracers confundan este criterio
             Variables=[Variables '"x"' ',"y"' ',"z",'];
         end
     end
@@ -96,12 +97,12 @@ function y=ScanArchivo(keywords,archivo,tipos)
         %Ac� aplicar funci�n CambioFormato para las salidas
         TmpMtx=SacaNum(fid,ConvSpec,0);
         if tipos(i)==1||tipos(i)==3
-            if ~strcmp(keywords{i},'nodes')
+            if strcmp(keywords{i},'velocity')
                 salida(cont:cont+2)=CambioFormato(keywords{i},tipos(i),TmpMtx,salida(1).Param);
             else
                 salida(cont:cont+2)=CambioFormato(keywords{i},tipos(i),TmpMtx,test{1,2}{1});
             end
-                cont=cont+3;
+            cont=cont+3;
         else
             salida(cont).Keyword={keywords{i}};
             salida(cont).Param=test{1,2}{1};
@@ -115,14 +116,8 @@ end
 function maquillaje(StruData,Paso,Nombrearchivo)
     %Asegurarse de limpiar los NAN
     fid=fopen(Nombrearchivo,'a');
-    
-    CellCenter=[', VARLOCATION=([' num2str(find([StruData.Tipo]==0)-1,'%u ') ']=CELLCENTERED) ']; % El -1 es un quickn'Dirty por que el cell =2 genera un bug
-    fprintf(fid, ['ZONE T= "PASO      ' num2str(Paso) '"   N=' num2str(StruData(1).Param) ',   E=' num2str(StruData(4).Param) ',   F=FEBLOCK,  ET=BRICK' CellCenter '\n']);
-
-    
-    %fprintf(fid,['ZONE T= "PASO      ' num2str(Paso) '" DATAPACKING=BLOCK
-    %I=' num2str(StruData(1).Param) '\n']);
-    for i=[1:3 5:size(StruData,2) 4] %[1:3 5:size(StruData,2) 4]
+    fprintf(fid,['ZONE T= "PASO      ' num2str(Paso) '" DATAPACKING=BLOCK  I=' num2str(StruData(1).Param) '\n']);
+    for i=1:size(StruData,2) %[1:3 5:size(StruData,2) 4]
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         Cadena=['\n'];
         if StruData(i).Tipo==2

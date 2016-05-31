@@ -108,7 +108,7 @@ function y=ScanArchivo(keywords,archivo,tipos)
         %Ac� aplicar funci�n CambioFormato para las salidas
         TmpMtx=SacaNum(fid,ConvSpec,0);
         if tipos(i)==1||tipos(i)==3
-            if ~strcmp(keywords{i},'nodes')
+            if strcmp(keywords{i},'velocity')
                 salida(cont:cont+2)=CambioFormato(keywords{i},tipos(i),TmpMtx,salida(1).Param);
             else
                 salida(cont:cont+2)=CambioFormato(keywords{i},tipos(i),TmpMtx,test{1,2}{1});
