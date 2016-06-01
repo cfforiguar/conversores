@@ -1,11 +1,6 @@
-%Ojo al "bug" de las zonas a la hora de fusionar con la malla
-    %Toca hacer que las zonas sin gotas queden vac�as para tenerlas en
-    %cuenta
-%Toca corregir el c�digo para que queden tracersX, tracersY, tracersZ a
-%pesar de que no haya gotas para plotear.
 function [y]=GMV2Tecplot2()
 %Stock
-%keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'totmass'};
+keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'totmass' 'tracers' 'u_vel' 'v_vel' 'w_vel' 'temp' 'radius' 'spwall'};
 %Workaround
 %keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl'};
 %Tutorial
@@ -15,9 +10,11 @@ function [y]=GMV2Tecplot2()
 %Mech ic8h18:
 %keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'totmass'  'IC8H18' 'O2' 'N2' 'CO2' 'H2O' 'H' 'H2' 'O' 'N' 'OH' 'CO' 'NO' 'CH4' 'CH3O' 'CH2O' 'HCO' 'CH3' 'C2H3' 'C2H4' 'C2H5' 'C3H4' 'C3H5' 'C3H6' 'C3H7' 'C7H16' 'C7H15' 'C7H15O2' 'C7H14OOH' 'O2C7H14OOH' 'C7KET' 'C5H11CO' 'C7H14' 'C8H17' 'C8H17O2' 'C8H16OOH' 'O2C8H16OOH' 'C8KET' 'C6H13CO' 'C8H16' 'H2O2' 'N2O' 'HO2' 'NO2' 'CH2OH' 'CH3OH' 'C2H2' 'CH2CO' 'HCCO'};
 %MechPatel:
-keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'totmass' 'nc7h16' 'o2' 'n2' 'co2' 'h2o' 'h' 'h2' 'o' 'n' 'oh' 'co' 'no' 'h2o2' 'ho2' 'ch3o' 'ch2o' 'hco' 'ch2' 'ch3' 'ch4' 'c2h3' 'c2h4' 'c2h5' 'c3h4' 'c3h5' 'c3h6' 'c3h7' 'c7h15-2' 'c7h15o2' 'c7ket12' 'c5h11co'};
+%keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'totmass' 'nc7h16' 'o2' 'n2' 'co2' 'h2o' 'h' 'h2' 'o' 'n' 'oh' 'co' 'no' 'h2o2' 'ho2' 'ch3o' 'ch2o' 'hco' 'ch2' 'ch3' 'ch4' 'c2h3' 'c2h4' 'c2h5' 'c3h4' 'c3h5' 'c3h6' 'c3h7' 'c7h15-2' 'c7h15o2' 'c7ket12' 'c5h11co'};
 %keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'totmass' 'ch2o'};% 'hco' 'ch2' 'ch3' 'ch4' 'c2h3' 'c2h4' 'c2h5' 'c3h4' 'c3h5' 'c3h6' 'c3h7' 'c7h15-2' 'c7h15o2' 'c7ket12' 'c5h11co'};
-tipos=[1 2 1 0 0 0 0 0 0 0 zeros(1,80)];
+tipos=zeros(size(keywords));
+tipos([1 : 3])=[1 2 1];%Para que lea los nodos y velocidades como node-centered
+tipos(find(strcmp([keywords],'tracers'),1))=1;% Para que lea tracers, si los hay
 %Incluir la funci�n para que encuentre todos los archivos
 MaximoSize=ScanMaxFile();
 Maximo=MaximoSize(1);
@@ -27,18 +24,24 @@ archivo=['plotgmv' char([0 0]+48)];
 y=ScanArchivo(keywords,archivo,tipos);
     Nombrearchivo='GMV2TECPLOT-P.tec';
     fid=fopen(Nombrearchivo,'wt+');
-    fprintf(fid, '   TITLE = "Convertido de GMV a Tecplot y paraview GMV2TECPLOT 2.1"\n');
+    fprintf(fid, '   TITLE = "Convertido de GMV a Tecplot y paraview GMV2TECPLOT 2.2"\n');
     Variables=[];
     %%%%%%%%%%
+    temperFlag=0;
     for i=1:size(keywords,2)
-        if tipos(i)==0
-            Variables=[Variables '"' char(keywords(i)) '",'];
-        end
-        if tipos(i)==1&&i>2
+        if strcmp(keywords{i},'velocity')||strcmp(keywords{i},'tracers')%Para la velocidad ó tracers ó similares
             Variables=[Variables '"' char(keywords(i)) 'X"' ',"' char(keywords(i)) 'Y"' ',"' char(keywords(i)) 'Z",'];
-        end
-        if tipos(i)==1&&i==1
+        elseif strcmp(keywords{i},'nodes')
             Variables=[Variables '"x"' ',"y"' ',"z",'];
+        elseif strcmp(keywords{i},'temp')%Para que no haya 2 variables "temp" en la lista de variables
+          temperFlag=temperFlag+1;
+          if temperFlag==1
+            Variables=[Variables '"temp",'];
+          elseif temperFlag==2
+            Variables=[Variables '"tempDrop",'];
+          end
+        elseif tipos(i)==0
+            Variables=[Variables '"' char(keywords(i)) '",'];
         end
     end
     fprintf(fid, ['    VARIABLES =' Variables '\n']);
@@ -89,7 +92,6 @@ function y=ScanArchivo(keywords,archivo,tipos)
             return;%Salgase en caso de EOF
             fclose(fid);
         end 
-        isempty(test{1,1});
         while isempty(test{1,1})
             if TestEOF(fid)
                 y=salida;
@@ -125,16 +127,24 @@ function y=ScanArchivo(keywords,archivo,tipos)
     y=salida;
 end
 function maquillaje(StruData,Paso,Nombrearchivo)
-    %Asegurarse de limpiar los NAN
     fid=fopen(Nombrearchivo,'a');
-    
-    CellCenter=[', VARLOCATION=([' num2str(find([StruData.Tipo]==0)-1,'%u ') ']=CELLCENTERED) ']; % El -1 es un quickn'Dirty por que el cell =2 genera un bug
-    fprintf(fid, ['ZONE T= "PASO      ' num2str(Paso) '"   N=' num2str(StruData(1).Param) ',   E=' num2str(StruData(4).Param) ',   F=FEBLOCK,  ET=BRICK' CellCenter '\n']);
-
-    
+    fprintf(fid,['ZONE T= "PASO      ' num2str(Paso) '" ' '\n']);
+    fprintf(fid,[' STRANDID=1, SOLUTIONTIME=' num2str(Paso) '\n']);
+    fprintf(fid,[' N=' num2str(StruData(1).Param) ',   E=' num2str(StruData(4).Param) ',   F=FEBLOCK,  ET=BRICK ' '\n']);
+    PassInic=find(strcmp([StruData.Keyword],'tracersX'),1)-1;%"-1":La estructura "cells" no entra en la lista de variables "VARIABLES"
+    PassFin=find(strcmp([StruData.Keyword],'spwall'),1)-1;%"-1":La estructura "cells" no entra en la lista de variables "VARIABLES"
+    if isempty(PassInic) &&  isempty(PassFin)
+      PassInic=size(StruData,2);
+      PassFin=size(StruData,2)+8;
+    end
+    fprintf(fid,[' VARLOCATION=([' num2str(find([StruData(1:PassInic).Tipo]==0)-1,'%u ') ']=CELLCENTERED) ' '\n']); % El -1 es un quickn'Dirty por que el cell =2 genera un bug    
+    fprintf(fid,[' PASSIVEVARLIST=[' num2str(PassInic) '-' num2str(PassFin) '] \n']);
+    if Paso==38
+      disp('e');
+    end
     %fprintf(fid,['ZONE T= "PASO      ' num2str(Paso) '" DATAPACKING=BLOCK
     %I=' num2str(StruData(1).Param) '\n']);
-    for i=[1:3 5:size(StruData,2) 4] %[1:3 5:size(StruData,2) 4]
+    for i=[1:3 5:PassInic 4]
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         Cadena=['\n'];
         if StruData(i).Tipo==2

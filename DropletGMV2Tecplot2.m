@@ -1,12 +1,8 @@
-%Ojo al "bug" de las zonas a la hora de fusionar con la malla
-    %Toca hacer que las zonas sin gotas queden vac�as para tenerlas en
-    %cuenta
-%Toca corregir el c�digo para que queden tracersX, tracersY, tracersZ a
-%pesar de que no haya gotas para plotear.
 function [y]=DropletGMV2Tecplot2()
-keywords={'tracers' 'u_vel' 'v_vel' 'w_vel' 'temp' 'radius' 'spwall'};
-tipos=[1 0 0 0 0 0 0 zeros(1,80)];
-%%%4 4 4 4 4 1 0 0 0 
+keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'totmass' 'tracers' 'u_vel' 'v_vel' 'w_vel' 'temp' 'radius' 'spwall'};
+tipos=zeros(size(keywords));
+tipos([1 3])=1;%Para que lea los nodos y velocidades como node-centered
+tipos(size(keywords,2)-6:size(keywords,2))=[1 0 0 0 0 0 0];
 %Incluir la funci�n para que encuentre todos los archivos
 MaximoSize=ScanMaxFile();
 Maximo=MaximoSize(1);
@@ -14,20 +10,24 @@ Tamano=MaximoSize(2);
 archivo=['plotgmv' char([0 0]+48)];
 %archivo='plotgmv09';
 y=ScanArchivo(keywords,archivo,tipos);
-    Nombrearchivo='DropletGMV2TECPLOT-P_BETA.tec';
+    Nombrearchivo='DropletGMV2TECPLOT-P.tec';
     fid=fopen(Nombrearchivo,'wt+');
-    fprintf(fid, '   TITLE = "Convertido de GMV a Tecplot y paraview DropletGMV2TECPLOT 2.1"\n');
+    fprintf(fid, '   TITLE = "Convertido de GMV a Tecplot y paraview DropletGMV2TECPLOT 2.2"\n');
     Variables=[];
     %%%%%%%%%%
+    temperFlag=0;
     for i=1:size(keywords,2)
-        if tipos(i)==0
-            Variables=[Variables '"' char(keywords(i)) '",'];
-        end
-        if (tipos(i)==1&&i>2)||strcmp(keywords{i},'tracers')%Para la velocidad ó tracers
+        if strcmp(keywords{i},'velocity')||strcmp(keywords{i},'tracers')%Para la velocidad ó tracers ó similares
             Variables=[Variables '"' char(keywords(i)) 'X"' ',"' char(keywords(i)) 'Y"' ',"' char(keywords(i)) 'Z",'];
-        end
-        if (tipos(i)==1&&i==1)&&~strcmp(keywords{i},'tracers')%Para evitar que los tracers confundan este criterio
+        elseif strcmp(keywords{i},'nodes')
             Variables=[Variables '"x"' ',"y"' ',"z",'];
+        elseif strcmp(keywords{i},'temp')%Para que no haya 2 variables "temp" en la lista de variables
+          temperFlag=temperFlag+1;
+          if temperFlag==2
+            Variables=[Variables '"tempDrop",'];3
+          end
+        else
+            Variables=[Variables '"' char(keywords(i)) '",'];
         end
     end
     fprintf(fid, ['    VARIABLES =' Variables '\n']);
@@ -40,7 +40,7 @@ y=ScanArchivo(keywords,archivo,tipos);
         %Cambia el nombre de archivo para que lo escanee
         archivo=['plotgmv' char([floor(i/10) mod(i,10)]+48)];
         y=ScanArchivo(keywords,archivo,tipos);
-        if isempty(y);continue; end %En caso de no encontrar archivo
+        if isempty(y);continue;end %En caso de no encontrar archivo
         maquillaje(y,i,Nombrearchivo)
         if i==7
             disp('test')
@@ -78,7 +78,6 @@ function y=ScanArchivo(keywords,archivo,tipos)
             return;%Salgase en caso de EOF
             fclose(fid);
         end 
-        isempty(test{1,1});
         while isempty(test{1,1})
             if TestEOF(fid)
                 y=[];
@@ -105,19 +104,27 @@ function y=ScanArchivo(keywords,archivo,tipos)
             cont=cont+3;
         else
             salida(cont).Keyword={keywords{i}};
+            salida(cont).Mtx=TmpMtx;            
             salida(cont).Param=test{1,2}{1};
             salida(cont).Tipo=tipos(i);
-            salida(cont).Mtx=TmpMtx;
             cont=cont+1;
         end
     end
     y=salida;
 end
 function maquillaje(StruData,Paso,Nombrearchivo)
-    %Asegurarse de limpiar los NAN
     fid=fopen(Nombrearchivo,'a');
-    fprintf(fid,['ZONE T= "PASO      ' num2str(Paso) '" DATAPACKING=BLOCK  I=' num2str(StruData(1).Param) '\n']);
-    for i=1:size(StruData,2) %[1:3 5:size(StruData,2) 4]
+    fprintf(fid,['ZONE T= "PASO      ' num2str(Paso) '" ' '\n']);
+    fprintf(fid,[' STRANDID=2, SOLUTIONTIME=' num2str(Paso) '\n']);
+    fprintf(fid,[' DATAPACKING=BLOCK  I=' num2str(StruData(size(StruData,2)-8).Param) ', J=1, K=1 \n']);
+    %Se declaran como pasivas todas las variables excepto x,y,z y 'u_vel' 'v_vel' 'w_vel' 'temp' 'radius' 'spwall'
+    %tracersX, tracersY y tracersZ son asignadas como pasivas y sus valores
+    %serán asignados a x,y,z
+    fprintf(fid,[' PASSIVEVARLIST=[' num2str(4) '-' num2str(size(StruData,2)-6) '] \n']);
+    
+    %Los valores de  tracersX, tracersY y tracersZ son asignados a x,y,z
+    %Las variables restantes se escriben igual
+    for i=[size(StruData,2)-8:size(StruData,2)]
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         Cadena=['\n'];
         if StruData(i).Tipo==2
