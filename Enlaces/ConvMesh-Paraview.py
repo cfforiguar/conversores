@@ -1,1 +1,0 @@
-/home/carlos/Maestria/Mallador/Repositorios/conversores/ConvMesh-Paraview.py

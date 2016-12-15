@@ -1,4 +1,4 @@
-function []=datX()
+function []=datX2()
 %dir: para listar todo de forma chevere y de paso buscar
 %cd: 
 %pwd: Para listar el path actual
@@ -14,7 +14,7 @@ clc
     for i=3:size(y,1) %comienza en 3 por que los primeros 3 directorios son "." y ".."
         if getfield(y(i,1),'isdir')
             cd(fullfile(pwd,getfield(y(i,1),'name')));
-            Salida=datX2;
+            Salida=datX;
             if isempty(Salida)
                 cd('..');
                 continue;
@@ -52,9 +52,9 @@ clc
        saveas(FigHandle(i),cell2mat(Nombre(1)),'fig');
     end
 end
-function Celda=datX2()
+function Celda=datX()
 % Saca los datos de las funciones dat.xxx y las plotea
-    archivo='dat.species';
+    archivo='dat.thermo';
     fid=fopen(archivo,'r');
     if fid<=0
         Celda={};
@@ -77,7 +77,7 @@ function Celda=datX2()
             cont=cont+1;
         end
     end
-    Celda={Unidades;Labels;mat2cell(Mtx)};
+    Celda={Unidades;Labels;mat2cell(Mtx,size(Mtx,1),size(Mtx,2))};
 %     for i=2:size(Labels,2)
 %         figure
 %         plot(Mtx(:,1),Mtx(:,i));

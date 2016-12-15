@@ -1,6 +1,8 @@
 function [y]=GMV2Tecplot2()
 %Stock
-keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'totmass' 'tracers' 'u_vel' 'v_vel' 'w_vel' 'temp' 'radius' 'spwall'};
+%keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'totmass' 'tracers' 'u_vel' 'v_vel' 'w_vel' 'temp' 'radius' 'spwall'};
+%12species
+%keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'totmass' 'df2' 'o2' 'n2' 'co2' 'h2o' 'h' 'h2' 'o' 'n' 'oh' 'co' 'no' 'tracers' 'u_vel' 'v_vel' 'w_vel' 'temp' 'radius' 'spwall'};
 %Workaround
 %keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl'};
 %Tutorial
@@ -8,7 +10,7 @@ keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'to
 %Mech nuevo de Xi c8h18
 %keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'totmass' 'C8H18' 'O2' 'N2' 'CO2' 'H2O' 'H' ' H2' 'O' 'N' 'OH' 'CO' 'NO' 'HCO' 'H2O2' 'HO2' 'CH4' 'CH3O' 'CH2' 'CH3' 'C2H3' 'C2H4' 'C2H5' 'C3H4' 'C3H5' 'C3H6' 'CH2O' 'C3H7' 'C4H8' 'C8H17' 'C8H16' 'C8H17OO' 'C8H16OOH' 'OC8H15OOH' 'OOC8H16OOH' 'OC8H15O' 'N2O' 'NO2' 'AR'};
 %Mech ic8h18:
-%keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'totmass'  'IC8H18' 'O2' 'N2' 'CO2' 'H2O' 'H' 'H2' 'O' 'N' 'OH' 'CO' 'NO' 'CH4' 'CH3O' 'CH2O' 'HCO' 'CH3' 'C2H3' 'C2H4' 'C2H5' 'C3H4' 'C3H5' 'C3H6' 'C3H7' 'C7H16' 'C7H15' 'C7H15O2' 'C7H14OOH' 'O2C7H14OOH' 'C7KET' 'C5H11CO' 'C7H14' 'C8H17' 'C8H17O2' 'C8H16OOH' 'O2C8H16OOH' 'C8KET' 'C6H13CO' 'C8H16' 'H2O2' 'N2O' 'HO2' 'NO2' 'CH2OH' 'CH3OH' 'C2H2' 'CH2CO' 'HCCO'};
+keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'totmass'  'IC8H18' 'O2' 'N2' 'CO2' 'H2O' 'H' 'H2' 'O' 'N' 'OH' 'CO' 'NO' 'CH4' 'CH3O' 'CH2O' 'HCO' 'CH3' 'C2H3' 'C2H4' 'C2H5' 'C3H4' 'C3H5' 'C3H6' 'C3H7' 'C7H16' 'C7H15' 'C7H15O2' 'C7H14OOH' 'O2C7H14OOH' 'C7KET' 'C5H11CO' 'C7H14' 'C8H17' 'C8H17O2' 'C8H16OOH' 'O2C8H16OOH' 'C8KET' 'C6H13CO' 'C8H16' 'H2O2' 'N2O' 'HO2' 'NO2' 'CH2OH' 'CH3OH' 'C2H2' 'CH2CO' 'HCCO'};
 %MechPatel:
 %keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'totmass' 'nc7h16' 'o2' 'n2' 'co2' 'h2o' 'h' 'h2' 'o' 'n' 'oh' 'co' 'no' 'h2o2' 'ho2' 'ch3o' 'ch2o' 'hco' 'ch2' 'ch3' 'ch4' 'c2h3' 'c2h4' 'c2h5' 'c3h4' 'c3h5' 'c3h6' 'c3h7' 'c7h15-2' 'c7h15o2' 'c7ket12' 'c5h11co'};
 %keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'totmass' 'ch2o'};% 'hco' 'ch2' 'ch3' 'ch4' 'c2h3' 'c2h4' 'c2h5' 'c3h4' 'c3h5' 'c3h6' 'c3h7' 'c7h15-2' 'c7h15o2' 'c7ket12' 'c5h11co'};

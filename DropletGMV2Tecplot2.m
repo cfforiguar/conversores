@@ -1,5 +1,6 @@
 function [y]=DropletGMV2Tecplot2()
 keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'totmass' 'tracers' 'u_vel' 'v_vel' 'w_vel' 'temp' 'radius' 'spwall'};
+%keywords={'nodes' 'cells' 'velocity' 'pressure' 'temp' 'density' 'tke' 'scl' 'totmass' 'df2' 'o2' 'n2' 'co2' 'h2o' 'h' 'h2' 'o' 'n' 'oh' 'co' 'no' 'tracers' 'u_vel' 'v_vel' 'w_vel' 'temp' 'radius' 'spwall'};
 tipos=zeros(size(keywords));
 tipos([1 3])=1;%Para que lea los nodos y velocidades como node-centered
 tipos(size(keywords,2)-6:size(keywords,2))=[1 0 0 0 0 0 0];
