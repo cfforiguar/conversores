@@ -112,11 +112,11 @@ def PloteeAlgo(DatosCarpeta,KvProps,plotProps,CVGProps):
       plt.plot(Datos[CVGProps[1]],Datos[CVGProps[2]])
       leyenda.append('CVG-'+DatosCarpeta[cont][1])
   #Poner los ejes con unidades
-
   os.chdir(cwd)
   plt.xlabel(plotProps[1],fontsize=plotProps[0])
   plt.ylabel(plotProps[2],fontsize=plotProps[0])
-  plt.legend(leyenda)
+  plt.legend(leyenda,loc='best')
+  plt.legend
   plt.savefig(plotProps[3], bbox_inches='tight')
   plt.show()#Muestra el gráfico
 
@@ -181,7 +181,8 @@ def pltSpecies(DatosCarpeta,CA,Especies,Espacios):#,KvProps,plotProps,CVGProps):
     #Plotear
     plt.yscale('log')
     plt.plot(x, yinterp, 'o')
-  plt.legend(leyenda, loc='best', bbox_to_anchor=(1.0, 1.0))
+  plt.legend(leyenda, loc='upper center',ncol=4, bbox_to_anchor=(0, 1.0, 1, 0.1),
+                       mode="expand", borderaxespad=0.)#, bbox_to_anchor=(1.0, 1.0))
   print(Especies[0][0:])
   plt.xlabel(plotProps[1],fontsize=plotProps[0])
   plt.ylabel(plotProps[2],fontsize=plotProps[0])
