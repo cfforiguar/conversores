@@ -75,50 +75,65 @@ modl.pltSpecies(DatosCarpeta,25.0,Especies,Espacios)
 
 #dat.species degrees co  [g]
 
-def pltHRR(DatosCarpeta):
+def pltHRR(DatosCarpeta,NewHead=None,xlim=[-90,90],**kwargs):
   #netHRR [erg/CAD]
   KvProps=(['dat.thermo','Crank','netHRR',1.0e-7])
   #Integrated_HR [J] HR_Rate [J/time]
   CVGProps=(['thermo.out','crank','HR_Rate'])
   plotProps=([16,'CAD','HRR [J/CAD]','HRR.jpg'])
-  PloteeAlgo(DatosCarpeta,KvProps,plotProps,CVGProps)
+  PloteeAlgo(DatosCarpeta,KvProps,plotProps,CVGProps,NewHead,xlim,**kwargs)
+    #*Opt=NewHead=None, if NewHead==None, head = OldSchool
 
-def pltPress(DatosCarpeta):
+def pltPress(DatosCarpeta,NewHead=None,xlim=[-90,90],**kwargs):
   KvProps=(['dat.thermo','Crank','Press',1.0e-7])
   CVGProps=(['thermo.out','crank','Pressure'])
   plotProps=([16,'CAD','Pressure [MPa]','Press.jpg'])
-  PloteeAlgo(DatosCarpeta,KvProps,plotProps,CVGProps)
+  PloteeAlgo(DatosCarpeta,KvProps,plotProps,CVGProps,NewHead,xlim,**kwargs)
+    #*Opt=NewHead=None, if NewHead==None, head = OldSchool
 
-def pltTemp(DatosCarpeta):
+def pltTemp(DatosCarpeta,NewHead=None,xlim=[-90,90],**kwargs):
   KvProps=(['dat.thermo','Crank','Temp',1.0])
   CVGProps=(['thermo.out','crank','Mean_Temp'])
   plotProps=([16,'CAD','Temperature [K]','Temp.jpg'])
-  PloteeAlgo(DatosCarpeta,KvProps,plotProps,CVGProps)
+  PloteeAlgo(DatosCarpeta,KvProps,plotProps,CVGProps,NewHead,xlim,**kwargs)
+    #*Opt=NewHead=None, if NewHead==None, head = OldSchool
 
-def PloteeAlgo(DatosCarpeta,KvProps,plotProps,CVGProps):
+def PloteeAlgo(DatosCarpeta,KvProps,plotProps,CVGProps,NewHead=None,xlim=[-90,90],**kwargs):
   from matplotlib import pyplot as plt
   import numpy as np
   import os
   cwd = os.getcwd()
   leyenda=list()#inicializa la lista
+  strHead=NewHead
+  markers=('.','o','v','^','<','>','1','2','3','4','8','s','p','P','*','h','H','+','x','X','D','d','|','_')
+  
+  #*Opt=NewHead=None, if NewHead==None, head = OldSchool
   for cont in range(0, len(DatosCarpeta)):
     os.chdir(DatosCarpeta[cont][0]+'/'+DatosCarpeta[cont][1])
     if (DatosCarpeta[cont][2]==1):
+      if (NewHead==None):
+        strHead='KV-'
       Datos = np.genfromtxt(KvProps[0], skip_header=DatosCarpeta[cont][2], names=True) 
-      plt.plot(Datos[KvProps[1]],Datos[KvProps[2]]*KvProps[3])
-      leyenda.append('KV-'+DatosCarpeta[cont][1])
+      plt.plot(Datos[KvProps[1]],Datos[KvProps[2]]*KvProps[3],
+               markers[cont],ls='-',**kwargs)
+      leyenda.append(strHead+DatosCarpeta[cont][1])
     else:
+      if (NewHead==None):
+        strHead='CVG-'
       Datos = np.genfromtxt(CVGProps[0], skip_header=DatosCarpeta[cont][2], names=True) 
-      plt.plot(Datos[CVGProps[1]],Datos[CVGProps[2]])
-      leyenda.append('CVG-'+DatosCarpeta[cont][1])
+      plt.plot(Datos[CVGProps[1]],Datos[CVGProps[2]],
+               markers[cont],ls='-',**kwargs)
+      leyenda.append(strHead+DatosCarpeta[cont][1])
   #Poner los ejes con unidades
   os.chdir(cwd)
   plt.xlabel(plotProps[1],fontsize=plotProps[0])
   plt.ylabel(plotProps[2],fontsize=plotProps[0])
-  plt.legend(leyenda,loc='best')
-  plt.legend
+  plt.legend(leyenda, ncol=3, bbox_to_anchor=(-0.08, -0.2, 1.15, 0.13),
+                       mode="expand", borderaxespad=1.0, loc='upper center')#, bbox_to_anchor=(1.0, 1.0))
+  plt.xlim(xlim)
   plt.savefig(plotProps[3], bbox_inches='tight')
   plt.show()#Muestra el gráfico
+
 
 #FIN?
 
