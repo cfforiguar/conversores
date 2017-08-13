@@ -667,5 +667,7 @@ Enlaces/DropletGMV2TecplotLk.m
 Enlace hacia GMV2TECPLOT.m
 test files/DropletGMV2Tecplot2Lk.m
 test files/GMV2Tecplot2Lk.m
+Enlaces/*
+__pycache__/*
 syntax: regexp
 ~
