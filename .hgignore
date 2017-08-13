@@ -669,5 +669,7 @@ test files/DropletGMV2Tecplot2Lk.m
 test files/GMV2Tecplot2Lk.m
 Enlaces/*
 __pycache__/*
+test files/ConvRes-Paraview.py
+test files/datahk
 syntax: regexp
 ~
