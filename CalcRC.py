@@ -1,13 +1,12 @@
 #! /usr/bin/env python
+# encoding: utf-8
 #Calcula la relación de compresión a partir de lo impreso en el otape11 y el otape12
 # No es el código más inteligente, pero hace el trabajo :P
 import os
 import re
 import sys
  
-if os.path.isfile("./otape12"):
-  f1=open('RC.dat','w')
-  
+ 
 try:
   #Lea otape11
   with open('otape11','r') as f:
@@ -58,21 +57,20 @@ for i in range(0,len(lines)):
 #Arroje el cálculo
 
 
-out=("Cálculo de la relación de compresión a partir de lo impreso en el otape11 y el otape12 \n"
+out=("Cálculo de la relación de compresión a partir de lo impreso en el otape11 y el otape12\n"
+      ,"*****************************************"
+      ,"Advertencia!!"
+      ,"Verifique que tabla de ncaspec esté incluído CAD=0.0 para que el cálculo sea válido."
       ,"*****************************************\n"
-      ,"Advertencia!!\n"
-      ,"Verifique que tabla de ncaspec esté incluído CAD=0.0 para que el cálculo sea válido.\n"
-      ,"*****************************************\n"
-      ,"Volumen máximo (según otape11) [cm3]:        "+str(Re1Vol)+"\n"
-      ,"Volumen de los cuencos (según otape12)[cm3]: "+str(sumCupsVol)+"\n"
-      ,"Volumen mínimo [cm3]:                        "+str(minVol)+"\n"
-      ,"Relación de Compresión:                      "+str(Re1Vol/minVol)+"\n")
-
+      ,"Volumen máximo (según otape11) [cm3]:        "+str(Re1Vol)
+      ,"Volumen de los cuencos (según otape12)[cm3]: "+str(sumCupsVol)
+      ,"Volumen mínimo [cm3]:                        "+str(minVol)
+      ,"Relación de Compresión:                      "+str(Re1Vol/minVol))
 
 f1=open('RC.dat','w')
 
 for i in out:
-  f1.write(i)
-  print(i, end='')
+  f1.write(i+"\n")
+  print(i)
   
 f1.close()
