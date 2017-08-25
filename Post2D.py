@@ -1,4 +1,5 @@
 #! /home/carlos/opt/anaconda3/bin/python3
+# encoding: utf-8
 
 #One click postproc para el caso 2D
 import imp, sys, os
