@@ -5,7 +5,7 @@ import shutil
 import subprocess
 import os
 
-ParaviewSrc=r'/home/carlos/archivos/Materias/Tesis/Cacharreo_cantera/Pruebas_compilación_KIVA-Cantera/1_Cinetica_detallada_directa/ParaView-4.1.0-Linux-64bit/bin'
+ParaviewSrc=r'/home/carlos/archivos/Materias/Tesis/Cacharreo_cantera/Pruebas_compilacion_KIVA-Cantera/1_Cinetica_detallada_directa/ParaView-4.1.0-Linux-64bit/bin'
 dst=os.getcwd()
 
 #	6. Ejecutar el converter a paraview

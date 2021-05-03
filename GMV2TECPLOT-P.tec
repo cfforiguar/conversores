@@ -1,2 +1,2 @@
-   TITLE = "Convertido de GMV a Tecplot y paraview GMV2TECPLOT 2.1"
-    VARIABLES ="nodesX","nodesY","nodesZ","x","y","z","velocityX","velocityY","velocityZ","x","y","z","pressure","temp","density","tke","scl","er","totmass",
+   TITLE = "Convertido de GMV a Tecplot y paraview GMV2TECPLOT 2.2"
+    VARIABLES ="x","y","z","velocityX","velocityY","velocityZ","pressure","temp","density","tke","scl","totmass","tracersX","tracersY","tracersZ","u_vel","v_vel","w_vel","tempDrop","radius","spwall",
